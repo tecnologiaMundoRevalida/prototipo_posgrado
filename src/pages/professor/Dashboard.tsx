@@ -3,13 +3,11 @@ import {
   Container, 
   Typography, 
   Box, 
-  Paper, 
   Tabs, 
   Tab, 
   Button, 
   TextField,
   Divider,
-  IconButton,
   useTheme,
   Dialog,
   DialogTitle,
@@ -18,12 +16,9 @@ import {
   FormControlLabel,
   Switch,
   Card,
-  CardContent,
-  Avatar
+  CardContent
 } from '@mui/material';
 import { Grid } from '../../components/DisableTypeChecking';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Calendar from '../../components/Calendar';

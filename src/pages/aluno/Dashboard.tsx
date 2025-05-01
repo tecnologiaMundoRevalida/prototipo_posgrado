@@ -3,14 +3,11 @@ import {
   Container, 
   Typography, 
   Box, 
-  Paper, 
   Tabs, 
   Tab, 
   Button, 
   Divider,
-  useTheme,
-  Card,
-  CardContent
+  useTheme
 } from '@mui/material';
 import { Grid } from '../../components/DisableTypeChecking';
 import ClassSummary from '../../components/ClassSummary';
@@ -18,7 +15,6 @@ import Calendar from '../../components/Calendar';
 import TeacherCard from '../../components/TeacherCard';
 import AddIcon from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom';
-import DashboardStats from '../../components/DashboardStats';
 
 interface TabPanelProps {
   children?: React.ReactNode;
