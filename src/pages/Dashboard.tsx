@@ -9,7 +9,6 @@ import {
   useTheme
 } from '@mui/material';
 import { Grid } from '../components/DisableTypeChecking';
-import Header from '../components/Header';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import AssessmentIcon from '@mui/icons-material/Assessment';
@@ -66,9 +65,8 @@ const Dashboard: React.FC = () => {
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
-      <Header />
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
+      <Container maxWidth="lg" sx={{ pt: 4, pb: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: theme.palette.primary.main, mt: 2 }}>
           Dashboard
         </Typography>
         

@@ -18,7 +18,6 @@ import Calendar from '../../components/Calendar';
 import TeacherCard from '../../components/TeacherCard';
 import AddIcon from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom';
-import Header from '../../components/Header';
 import DashboardStats from '../../components/DashboardStats';
 
 interface TabPanelProps {
@@ -121,83 +120,85 @@ const AlunosDashboard: React.FC = () => {
   }));
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        <Typography variant="h4" component="h1" color="primary" fontWeight="bold">
-          Dashboard do Aluno
-        </Typography>
-        <Button 
-          component={Link}
-          to="/aluno/agendar"
-          variant="contained" 
-          color="primary" 
-          startIcon={<AddIcon />}
-        >
-          Nova Aula
-        </Button>
-      </Box>
-
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs 
-            value={tabValue} 
-            onChange={handleTabChange} 
-            aria-label="dashboard tabs"
-            textColor="primary"
-            indicatorColor="primary"
+    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+      <Container maxWidth="lg" sx={{ pt: 4, pb: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+          <Typography variant="h4" component="h1" color="primary" fontWeight="bold">
+            Dashboard do Aluno
+          </Typography>
+          <Button 
+            component={Link}
+            to="/aluno/agendar"
+            variant="contained" 
+            color="primary" 
+            startIcon={<AddIcon />}
           >
-            <Tab label="Minhas Aulas" />
-            <Tab label="Calendário" />
-            <Tab label="Professores Recomendados" />
-          </Tabs>
+            Nova Aula
+          </Button>
         </Box>
 
-        <TabPanel value={tabValue} index={0}>
-          <Typography variant="h6" gutterBottom>
-            Próximas Aulas
-          </Typography>
-          {classes.filter(c => c.status === 'agendada').map((classItem) => (
-            <ClassSummary
-              key={classItem.id}
-              {...classItem}
-              onCancel={() => console.log('Cancelar aula', classItem.id)}
-              onReschedule={() => console.log('Reagendar aula', classItem.id)}
-            />
-          ))}
+        <Box sx={{ width: '100%' }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs 
+              value={tabValue} 
+              onChange={handleTabChange} 
+              aria-label="dashboard tabs"
+              textColor="primary"
+              indicatorColor="primary"
+            >
+              <Tab label="Minhas Aulas" />
+              <Tab label="Calendário" />
+              <Tab label="Professores Recomendados" />
+            </Tabs>
+          </Box>
 
-          <Divider sx={{ my: 4 }} />
-          
-          <Typography variant="h6" gutterBottom>
-            Aulas Concluídas
-          </Typography>
-          {classes.filter(c => c.status === 'concluida').map((classItem) => (
-            <ClassSummary
-              key={classItem.id}
-              {...classItem}
-            />
-          ))}
-        </TabPanel>
-
-        <TabPanel value={tabValue} index={1}>
-          <Calendar 
-            events={calendarEvents}
-            selectable={false}
-            editable={false}
-            onEventClick={(event) => console.log('Evento clicado', event)}
-          />
-        </TabPanel>
-
-        <TabPanel value={tabValue} index={2}>
-          <Grid container spacing={3}>
-            {recommendedTeachers.map((teacher) => (
-              <Grid item xs={12} md={6} key={teacher.id}>
-                <TeacherCard {...teacher} />
-              </Grid>
+          <TabPanel value={tabValue} index={0}>
+            <Typography variant="h6" gutterBottom>
+              Próximas Aulas
+            </Typography>
+            {classes.filter(c => c.status === 'agendada').map((classItem) => (
+              <ClassSummary
+                key={classItem.id}
+                {...classItem}
+                onCancel={() => console.log('Cancelar aula', classItem.id)}
+                onReschedule={() => console.log('Reagendar aula', classItem.id)}
+              />
             ))}
-          </Grid>
-        </TabPanel>
-      </Box>
-    </Container>
+
+            <Divider sx={{ my: 4 }} />
+            
+            <Typography variant="h6" gutterBottom>
+              Aulas Concluídas
+            </Typography>
+            {classes.filter(c => c.status === 'concluida').map((classItem) => (
+              <ClassSummary
+                key={classItem.id}
+                {...classItem}
+              />
+            ))}
+          </TabPanel>
+
+          <TabPanel value={tabValue} index={1}>
+            <Calendar 
+              events={calendarEvents}
+              selectable={false}
+              editable={false}
+              onEventClick={(event) => console.log('Evento clicado', event)}
+            />
+          </TabPanel>
+
+          <TabPanel value={tabValue} index={2}>
+            <Grid container spacing={3}>
+              {recommendedTeachers.map((teacher) => (
+                <Grid item xs={12} md={6} key={teacher.id}>
+                  <TeacherCard {...teacher} />
+                </Grid>
+              ))}
+            </Grid>
+          </TabPanel>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 

@@ -17,7 +17,6 @@ import {
   SelectChangeEvent
 } from '@mui/material';
 import { Grid } from '../components/DisableTypeChecking';
-import Header from '../components/Header';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -130,13 +129,12 @@ const Schedule: React.FC = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
       <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
-        <Header />
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
+        <Container maxWidth="lg" sx={{ pt: 4, pb: 4 }}>
+          <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: theme.palette.primary.main, mt: 2 }}>
             Agendar Aula
           </Typography>
           
-          <Paper sx={{ p: 3, mt: 3, boxShadow: 3 }}>
+          <Paper sx={{ p: 4, mt: 3, boxShadow: 3, borderRadius: 2 }}>
             <form onSubmit={handleSubmit}>
               <Grid container spacing={3}>
                 {/* Dados pessoais */}
@@ -319,9 +317,10 @@ const Schedule: React.FC = () => {
                     sx={{ 
                       minWidth: 200,
                       textTransform: 'none',
-                      fontSize: '1rem',
+                      fontSize: '1.1rem',
                       fontWeight: 'bold',
-                      py: 1
+                      py: 1.2,
+                      borderRadius: '30px'
                     }}
                   >
                     Agendar Aula

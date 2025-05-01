@@ -17,11 +17,11 @@ import {
   Avatar,
   Tooltip,
   Menu,
-  MenuItem
+  MenuItem,
+  useMediaQuery
 } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import HomeIcon from '@mui/icons-material/Home';
@@ -32,8 +32,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Footer from './Footer';
 
-const drawerWidth = 240;
-
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -41,15 +39,12 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const theme = useTheme();
   const location = useLocation();
-  const [open, setOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -74,180 +69,228 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { text: 'Sair', icon: <LogoutIcon fontSize="small" /> }
   ];
 
+  // Drawer para mobile
+  const drawer = (
+    <Box sx={{ width: 250 }}>
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center',
+          p: 2,
+          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+          color: 'white'
+        }}
+      >
+        <Avatar 
+          sx={{ 
+            width: 60, 
+            height: 60, 
+            mb: 1,
+            bgcolor: theme.palette.secondary.main
+          }}
+        >
+          P
+        </Avatar>
+        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+          PosgradoMed
+        </Typography>
+      </Box>
+      <Divider />
+      <List>
+        {menuItems.map((item) => (
+          <ListItem key={item.text} disablePadding>
+            <ListItemButton
+              component={Link}
+              to={item.path}
+              onClick={handleDrawerToggle}
+              sx={{
+                minHeight: 48,
+                bgcolor: location.pathname === item.path ? 'rgba(0, 0, 0, 0.04)' : 'transparent',
+                '&:hover': {
+                  bgcolor: 'rgba(0, 0, 0, 0.08)',
+                },
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: 3,
+                  justifyContent: 'center',
+                  color: location.pathname === item.path ? theme.palette.primary.main : 'inherit',
+                }}
+              >
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText 
+                primary={item.text} 
+                sx={{ 
+                  color: location.pathname === item.path ? theme.palette.primary.main : 'inherit', 
+                }} 
+              />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <AppBar
         position="fixed"
         sx={{
           zIndex: theme.zIndex.drawer + 1,
-          transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-          }),
-          ...(open && {
-            marginLeft: drawerWidth,
-            width: `calc(100% - ${drawerWidth}px)`,
-            transition: theme.transitions.create(['width', 'margin'], {
-              easing: theme.transitions.easing.sharp,
-              duration: theme.transitions.duration.enteringScreen,
-            }),
-          }),
+          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
         }}
       >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(open && { display: 'none' }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-          >
-            PosgradoMed Agendamento
-          </Typography>
-
-          {/* Menu do usuário */}
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Abrir configurações">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Usuário" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {userMenuItems.map((item) => (
-                <MenuItem key={item.text} onClick={handleCloseUserMenu}>
-                  <ListItemIcon>
-                    {item.icon}
-                  </ListItemIcon>
-                  <Typography textAlign="center">{item.text}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        open={open}
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-            whiteSpace: 'nowrap',
-            transition: theme.transitions.create('width', {
-              easing: theme.transitions.easing.sharp,
-              duration: theme.transitions.duration.enteringScreen,
-            }),
-            ...(!open && {
-              overflowX: 'hidden',
-              transition: theme.transitions.create('width', {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen,
-              }),
-              width: theme.spacing(7),
-              [theme.breakpoints.up('sm')]: {
-                width: theme.spacing(9),
-              },
-            }),
-          },
-        }}
-      >
-        <Toolbar
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            px: [1],
-          }}
-        >
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </Toolbar>
-        <Divider />
-        <List>
-          {menuItems.map((item) => (
-            <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                component={Link}
-                to={item.path}
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                  bgcolor: location.pathname === item.path ? 'rgba(0, 0, 0, 0.04)' : 'transparent',
-                  '&:hover': {
-                    bgcolor: 'rgba(0, 0, 0, 0.08)',
-                  },
-                }}
+        <Container maxWidth="lg">
+          <Toolbar sx={{ p: { xs: 0, sm: 1 } }}>
+            {/* Menu Mobile */}
+            {isMobile && (
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{ mr: 2 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                    color: location.pathname === item.path ? theme.palette.primary.main : 'inherit',
-                  }}
-                >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText 
-                  primary={item.text} 
-                  sx={{ 
-                    opacity: open ? 1 : 0,
-                    color: location.pathname === item.path ? theme.palette.primary.main : 'inherit', 
-                  }} 
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+                <MenuIcon />
+              </IconButton>
+            )}
+            
+            {/* Logo */}
+            <Typography
+              variant="h6"
+              component={Link}
+              to="/"
+              sx={{ 
+                flexGrow: 1, 
+                textDecoration: 'none',
+                color: 'white',
+                fontWeight: 'bold'
+              }}
+            >
+              PosgradoMed
+            </Typography>
+            
+            {/* Menu Desktop */}
+            {!isMobile && (
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                {menuItems.map((item) => (
+                  <Box 
+                    key={item.text}
+                    component={Link}
+                    to={item.path}
+                    sx={{ 
+                      mx: 1.5,
+                      color: 'white',
+                      textDecoration: 'none',
+                      fontWeight: location.pathname === item.path ? 'bold' : 'normal',
+                      opacity: location.pathname === item.path ? 1 : 0.8,
+                      position: 'relative',
+                      padding: '0.5rem 0',
+                      '&::after': {
+                        content: '""',
+                        position: 'absolute',
+                        bottom: 0,
+                        left: location.pathname === item.path ? '0%' : '50%',
+                        width: location.pathname === item.path ? '100%' : 0,
+                        height: 2,
+                        bgcolor: 'white',
+                        transition: 'all 0.3s ease',
+                      },
+                      '&:hover': {
+                        opacity: 1,
+                        '&::after': {
+                          width: '100%',
+                          left: '0%',
+                        }
+                      }
+                    }}
+                  >
+                    {item.text}
+                  </Box>
+                ))}
+              </Box>
+            )}
+
+            {/* Menu do usuário */}
+            <Box sx={{ flexGrow: 0, ml: 2 }}>
+              <Tooltip title="Configurações">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar 
+                    alt="Usuário" 
+                    src="/static/images/avatar/2.jpg"
+                    sx={{ 
+                      width: 40, 
+                      height: 40,
+                      border: '2px solid white' 
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {userMenuItems.map((item) => (
+                  <MenuItem key={item.text} onClick={handleCloseUserMenu}>
+                    <ListItemIcon>
+                      {item.icon}
+                    </ListItemIcon>
+                    <Typography>{item.text}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+      
+      {/* Drawer Mobile */}
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true, // Melhor performance em dispositivos móveis
+        }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': { width: 250 },
+        }}
+      >
+        {drawer}
       </Drawer>
+      
+      {/* Conteúdo principal */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { sm: `calc(100% - ${open ? drawerWidth : theme.spacing(9)}px)` },
-          ml: { sm: open ? `${drawerWidth}px` : `${theme.spacing(9)}px` },
-          transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-          }),
+          mt: 8,
         }}
       >
-        <Toolbar />
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Container maxWidth="lg" sx={{ pt: 2 }}>
           {children}
         </Container>
       </Box>
+      
       <Footer />
     </Box>
   );

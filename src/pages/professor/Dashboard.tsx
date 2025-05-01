@@ -28,7 +28,6 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Calendar from '../../components/Calendar';
 import ClassSummary from '../../components/ClassSummary';
-import Header from '../../components/Header';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -165,207 +164,209 @@ const ProfessorDashboard: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        <Typography variant="h4" component="h1" color="primary" fontWeight="bold">
-          Dashboard do Professor
-        </Typography>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          startIcon={<CalendarMonthIcon />}
-          onClick={() => setAvailabilityDialog(true)}
-        >
-          Gerenciar Disponibilidade
-        </Button>
-      </Box>
-
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs 
-            value={tabValue} 
-            onChange={handleTabChange} 
-            aria-label="dashboard tabs"
-            textColor="primary"
-            indicatorColor="primary"
+    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+      <Container maxWidth="lg" sx={{ pt: 4, pb: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+          <Typography variant="h4" component="h1" color="primary" fontWeight="bold">
+            Dashboard do Professor
+          </Typography>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            startIcon={<CalendarMonthIcon />}
+            onClick={() => setAvailabilityDialog(true)}
           >
-            <Tab label="Aulas Agendadas" icon={<AssignmentIcon />} iconPosition="start" />
-            <Tab label="Calendário" icon={<CalendarMonthIcon />} iconPosition="start" />
-          </Tabs>
+            Gerenciar Disponibilidade
+          </Button>
         </Box>
 
-        <TabPanel value={tabValue} index={0}>
-          <Typography variant="h6" gutterBottom>
-            Próximas Aulas
-          </Typography>
-          {classes.filter(c => c.status === 'agendada').map((classItem) => (
-            <Box key={classItem.id} sx={{ mb: 3 }}>
-              <ClassSummary
-                {...classItem}
-                teacherName={classItem.studentName}
-              />
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: -1 }}>
-                <Button 
-                  startIcon={<AssignmentIcon />}
-                  onClick={() => handleOpenNotes(classItem.id, classItem.notes)}
-                  color="primary"
-                >
-                  {classItem.notes ? 'Editar Anotações' : 'Adicionar Anotações'}
-                </Button>
-              </Box>
-            </Box>
-          ))}
-
-          <Divider sx={{ my: 4 }} />
-          
-          <Typography variant="h6" gutterBottom>
-            Aulas Concluídas
-          </Typography>
-          {classes.filter(c => c.status === 'concluida').map((classItem) => (
-            <Box key={classItem.id} sx={{ mb: 3 }}>
-              <ClassSummary
-                {...classItem}
-                teacherName={classItem.studentName}
-              />
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: -1 }}>
-                <Button 
-                  startIcon={<AssignmentIcon />}
-                  onClick={() => handleOpenNotes(classItem.id, classItem.notes)}
-                  color="primary"
-                >
-                  {classItem.notes ? 'Editar Anotações' : 'Adicionar Anotações'}
-                </Button>
-              </Box>
-            </Box>
-          ))}
-        </TabPanel>
-
-        <TabPanel value={tabValue} index={1}>
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle1" gutterBottom>
-              <Box component="span" sx={{ color: theme.palette.primary.main, fontWeight: 'bold', mr: 1 }}>●</Box>
-              Aulas Agendadas
-              <Box component="span" sx={{ color: theme.palette.success.main, fontWeight: 'bold', mx: 2 }}>●</Box>
-              Aulas Concluídas
-              <Box component="span" sx={{ color: theme.palette.success.light, fontWeight: 'bold', mx: 2 }}>●</Box>
-              Horários Disponíveis
-            </Typography>
+        <Box sx={{ width: '100%' }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs 
+              value={tabValue} 
+              onChange={handleTabChange} 
+              aria-label="dashboard tabs"
+              textColor="primary"
+              indicatorColor="primary"
+            >
+              <Tab label="Aulas Agendadas" icon={<AssignmentIcon />} iconPosition="start" />
+              <Tab label="Calendário" icon={<CalendarMonthIcon />} iconPosition="start" />
+            </Tabs>
           </Box>
-          
-          <Calendar 
-            events={[...calendarEvents, ...availabilityEvents]}
-            selectable={false}
-            editable={false}
-            onEventClick={(event) => console.log('Evento clicado', event)}
-          />
-        </TabPanel>
-      </Box>
 
-      {/* Diálogo para adicionar/editar anotações */}
-      <Dialog 
-        open={openDialog} 
-        onClose={() => setOpenDialog(false)}
-        fullWidth
-        maxWidth="md"
-      >
-        <DialogTitle>Anotações da Aula</DialogTitle>
-        <DialogContent>
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle1" gutterBottom>
-              Aluno: {classes.find(c => c.id === currentClass)?.studentName}
-            </Typography>
-            <Typography variant="subtitle2" gutterBottom>
-              Tópico: {classes.find(c => c.id === currentClass)?.topic}
-            </Typography>
-          </Box>
-          <TextField
-            autoFocus
-            multiline
-            rows={6}
-            fullWidth
-            label="Anotações sobre o progresso do aluno"
-            value={currentNote}
-            onChange={(e) => setCurrentNote(e.target.value)}
-            placeholder="Registre aqui suas observações sobre o desempenho do aluno, dificuldades encontradas, avanços e recomendações para próximas aulas."
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Cancelar</Button>
-          <Button onClick={handleSaveNotes} variant="contained" color="primary">
-            Salvar
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Diálogo para gerenciar disponibilidade */}
-      <Dialog 
-        open={availabilityDialog} 
-        onClose={() => setAvailabilityDialog(false)}
-        fullWidth
-        maxWidth="md"
-      >
-        <DialogTitle>Gerenciar Disponibilidade</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2" color="text.secondary" paragraph>
-            Clique no calendário para adicionar novos horários de disponibilidade.
-          </Typography>
-          
-          <Calendar 
-            events={availabilityEvents}
-            selectable={true}
-            editable={true}
-            onEventAdd={handleAddAvailability}
-          />
-          
-          <Box sx={{ mt: 4 }}>
+          <TabPanel value={tabValue} index={0}>
             <Typography variant="h6" gutterBottom>
-              Disponibilidade Padrão Semanal
+              Próximas Aulas
             </Typography>
-            <Grid container spacing={2}>
-              {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((day, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Card variant="outlined">
-                    <CardContent>
-                      <Typography variant="subtitle1" gutterBottom>
-                        {day}
-                      </Typography>
-                      <FormControlLabel
-                        control={<Switch color="primary" />}
-                        label="Disponível"
-                      />
-                      {index < 5 && (
-                        <Box sx={{ mt: 1 }}>
-                          <TextField
-                            label="Horário de Início"
-                            type="time"
-                            defaultValue="08:00"
-                            size="small"
-                            sx={{ mr: 1, width: '45%' }}
-                          />
-                          <TextField
-                            label="Horário de Fim"
-                            type="time"
-                            defaultValue="18:00"
-                            size="small"
-                            sx={{ width: '45%' }}
-                          />
-                        </Box>
-                      )}
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setAvailabilityDialog(false)}>Cancelar</Button>
-          <Button variant="contained" color="primary">
-            Salvar Disponibilidade
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+            {classes.filter(c => c.status === 'agendada').map((classItem) => (
+              <Box key={classItem.id} sx={{ mb: 3 }}>
+                <ClassSummary
+                  {...classItem}
+                  teacherName={classItem.studentName}
+                />
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: -1 }}>
+                  <Button 
+                    startIcon={<AssignmentIcon />}
+                    onClick={() => handleOpenNotes(classItem.id, classItem.notes)}
+                    color="primary"
+                  >
+                    {classItem.notes ? 'Editar Anotações' : 'Adicionar Anotações'}
+                  </Button>
+                </Box>
+              </Box>
+            ))}
+
+            <Divider sx={{ my: 4 }} />
+            
+            <Typography variant="h6" gutterBottom>
+              Aulas Concluídas
+            </Typography>
+            {classes.filter(c => c.status === 'concluida').map((classItem) => (
+              <Box key={classItem.id} sx={{ mb: 3 }}>
+                <ClassSummary
+                  {...classItem}
+                  teacherName={classItem.studentName}
+                />
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: -1 }}>
+                  <Button 
+                    startIcon={<AssignmentIcon />}
+                    onClick={() => handleOpenNotes(classItem.id, classItem.notes)}
+                    color="primary"
+                  >
+                    {classItem.notes ? 'Editar Anotações' : 'Adicionar Anotações'}
+                  </Button>
+                </Box>
+              </Box>
+            ))}
+          </TabPanel>
+
+          <TabPanel value={tabValue} index={1}>
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle1" gutterBottom>
+                <Box component="span" sx={{ color: theme.palette.primary.main, fontWeight: 'bold', mr: 1 }}>●</Box>
+                Aulas Agendadas
+                <Box component="span" sx={{ color: theme.palette.success.main, fontWeight: 'bold', mx: 2 }}>●</Box>
+                Aulas Concluídas
+                <Box component="span" sx={{ color: theme.palette.success.light, fontWeight: 'bold', mx: 2 }}>●</Box>
+                Horários Disponíveis
+              </Typography>
+            </Box>
+            
+            <Calendar 
+              events={[...calendarEvents, ...availabilityEvents]}
+              selectable={false}
+              editable={false}
+              onEventClick={(event) => console.log('Evento clicado', event)}
+            />
+          </TabPanel>
+        </Box>
+
+        {/* Diálogo para adicionar/editar anotações */}
+        <Dialog 
+          open={openDialog} 
+          onClose={() => setOpenDialog(false)}
+          fullWidth
+          maxWidth="md"
+        >
+          <DialogTitle>Anotações da Aula</DialogTitle>
+          <DialogContent>
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="subtitle1" gutterBottom>
+                Aluno: {classes.find(c => c.id === currentClass)?.studentName}
+              </Typography>
+              <Typography variant="subtitle2" gutterBottom>
+                Tópico: {classes.find(c => c.id === currentClass)?.topic}
+              </Typography>
+            </Box>
+            <TextField
+              autoFocus
+              multiline
+              rows={6}
+              fullWidth
+              label="Anotações sobre o progresso do aluno"
+              value={currentNote}
+              onChange={(e) => setCurrentNote(e.target.value)}
+              placeholder="Registre aqui suas observações sobre o desempenho do aluno, dificuldades encontradas, avanços e recomendações para próximas aulas."
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenDialog(false)}>Cancelar</Button>
+            <Button onClick={handleSaveNotes} variant="contained" color="primary">
+              Salvar
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Diálogo para gerenciar disponibilidade */}
+        <Dialog 
+          open={availabilityDialog} 
+          onClose={() => setAvailabilityDialog(false)}
+          fullWidth
+          maxWidth="md"
+        >
+          <DialogTitle>Gerenciar Disponibilidade</DialogTitle>
+          <DialogContent>
+            <Typography variant="body2" color="text.secondary" paragraph>
+              Clique no calendário para adicionar novos horários de disponibilidade.
+            </Typography>
+            
+            <Calendar 
+              events={availabilityEvents}
+              selectable={true}
+              editable={true}
+              onEventAdd={handleAddAvailability}
+            />
+            
+            <Box sx={{ mt: 4 }}>
+              <Typography variant="h6" gutterBottom>
+                Disponibilidade Padrão Semanal
+              </Typography>
+              <Grid container spacing={2}>
+                {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((day, index) => (
+                  <Grid item xs={12} sm={6} md={4} key={index}>
+                    <Card variant="outlined">
+                      <CardContent>
+                        <Typography variant="subtitle1" gutterBottom>
+                          {day}
+                        </Typography>
+                        <FormControlLabel
+                          control={<Switch color="primary" />}
+                          label="Disponível"
+                        />
+                        {index < 5 && (
+                          <Box sx={{ mt: 1 }}>
+                            <TextField
+                              label="Horário de Início"
+                              type="time"
+                              defaultValue="08:00"
+                              size="small"
+                              sx={{ mr: 1, width: '45%' }}
+                            />
+                            <TextField
+                              label="Horário de Fim"
+                              type="time"
+                              defaultValue="18:00"
+                              size="small"
+                              sx={{ width: '45%' }}
+                            />
+                          </Box>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setAvailabilityDialog(false)}>Cancelar</Button>
+            <Button variant="contained" color="primary">
+              Salvar Disponibilidade
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+    </Box>
   );
 };
 

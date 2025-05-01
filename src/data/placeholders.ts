@@ -1,7 +1,10 @@
 // Placeholders de imagens para uso na aplicação
 export const PLACEHOLDERS = {
-  logo: 'https://via.placeholder.com/150x50/31677B/FFFFFF?text=PosgradoMed',
-  heroImage: 'https://via.placeholder.com/600x400/31677B/FFFFFF?text=PosgradoMed+Learning',
-  ctaImage: 'https://via.placeholder.com/600x400/EAC86E/1F272A?text=Medicos+Aprendendo',
-  avatarPlaceholder: (index: number) => `https://via.placeholder.com/50x50/31677B/FFFFFF?text=User${index}`,
+  logo: 'https://placehold.co/150x50/1976d2/FFFFFF.png?text=PosgradoMed',
+  heroImage: 'https://placehold.co/700x500/1976d2/FFFFFF.png?text=Português+Médico',
+  ctaImage: 'https://placehold.co/700x500/f57c00/FFFFFF.png?text=Médicos+Brasil',
+  avatarPlaceholder: (index: number) => `https://randomuser.me/api/portraits/${index % 2 === 0 ? 'men' : 'women'}/${index + 10}.jpg`,
+  featureIcon1: 'https://placehold.co/80x80/1976d2/FFFFFF.png?text=Agendar',
+  featureIcon2: 'https://placehold.co/80x80/1976d2/FFFFFF.png?text=Estudar',
+  featureIcon3: 'https://placehold.co/80x80/1976d2/FFFFFF.png?text=Progredir',
 }; 
